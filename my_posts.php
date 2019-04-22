@@ -9,7 +9,7 @@ include("functions/functions.php");
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>WELCOME USER!</title>
+    <title>members page</title>
     <link rel="stylesheet" href="styles/home_style.css" type="text/css" media="screen">
     <meta name="viewport" content="width=device-width, initial-scale=1" >
     <script src="main.js"></script>
@@ -89,7 +89,7 @@ include("functions/functions.php");
                          <p><strong>Last Login:</strong> $last_login </P>
                          <p><strong>Member Since:</strong> $register_date </P>
                          <p><a href='my_message.php?u_id=$user_id'>Message($count_msg)</a></P>
-                         <p><a href='my_posts.php?u_id=$user_id'>My Post ($posts)</a></P>
+                         
                          <p><a href='edit_profile.php'?u_id='$user_id'>Edit My Account</a></P>
                          <p><a href='logout.php'>Logout</a></p>
                      </div><!-- user_mention ends here -->
@@ -100,20 +100,8 @@ include("functions/functions.php");
     </div><!-- user_timeline ends here -->
 
     <div id="content_timeline">
-         <form action="home.php?id=<?php echo $user_id ?>" method="post" id="f">
-            <h2>What's Your question today? let's discuss!</h2>
-            <input type="text" name="title" placeholder="Write a Title..." size="80" required> <br>
-            <textarea cols="82" rows="4" name="content" placeholder="Write description..."></textarea><br>
-            <select name="topic">
-                <option>Select Topic</option>
-                <?php getTopics() ?>
-            </select>
-            <input type="submit" name="sub" value="Post to Timeline">
-         </form><!-- f ends here -->
-         <?php insertPosts() ?>
-
-         <h3>Most Recent Discussion!</h3>
-         <?php getPosts(); ?>
+         <h3>See All Members Here </h3>
+         <?php user_posts(); ?>
     </div><!-- content_timeline ends here -->
 
  </div><!-- content ends here -->

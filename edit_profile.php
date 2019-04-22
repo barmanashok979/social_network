@@ -9,7 +9,7 @@ include("functions/functions.php");
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>WELCOME USER!</title>
+    <title> USER profile edit</title>
     <link rel="stylesheet" href="styles/home_style.css" type="text/css" media="screen">
     <meta name="viewport" content="width=device-width, initial-scale=1" >
     <script src="main.js"></script>
@@ -64,7 +64,9 @@ include("functions/functions.php");
                $row = mysqli_fetch_array($run_user);
 
                $user_id = $row['user_id'];
-               $user_name = $row['user_name'];
+			   $user_name = $row['user_name'];
+			   $user_gender = $row['user_gender'];
+			   $user_pass = $row['user_pass'];
                $user_country = $row['user_country'];
                $user_image = $row['user_image'];
                $register_date = $row['user_reg_date'];
@@ -99,21 +101,91 @@ include("functions/functions.php");
         </div> <!-- user_details ends here -->
     </div><!-- user_timeline ends here -->
 
-    <div id="content_timeline">
-         <form action="home.php?id=<?php echo $user_id ?>" method="post" id="f">
-            <h2>What's Your question today? let's discuss!</h2>
-            <input type="text" name="title" placeholder="Write a Title..." size="80" required> <br>
-            <textarea cols="82" rows="4" name="content" placeholder="Write description..."></textarea><br>
-            <select name="topic">
-                <option>Select Topic</option>
-                <?php getTopics() ?>
-            </select>
-            <input type="submit" name="sub" value="Post to Timeline">
-         </form><!-- f ends here -->
-         <?php insertPosts() ?>
+    <div id="content_timeline" >
+         <form action="" method="post" id="f" class="ff" enctype="multipart/form-data">
+		    <table>
+				<tr align="center">
+                    <td colspan="6"> <h2>Edit Your Profile: </h2> </td>
+				</tr>
+				
+				<tr>
+					<td align="right">Name:</td>
+					<td>
+						<input type="text" name="u_name" value="<?php echo $user_name; ?>" required/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Password:</td>
+					<td>
+						<input type="password" name="u_pass" value="<?php echo $user_pass; ?>" required/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Email:</td>
+					<td>
+						<input type="text" name="u_email" value="<?php echo $user; ?>" required/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Country: </td>
+					<td>
+						<select name="u_country" disabled="disabled" id="">
+						<option><?php echo $user_country; ?> </option>
+						<option value="">india</option>
+						<option value="">pakistan</option>
+						<option value="">nepal</option>
+						<option value="">austrolia</option>
+						<option value="">bangaladesh</option>
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Gender:</td>
+					<td>
+						<select name="" id="" disabled="disabled">
+						<option><?php echo $user_gender; ?> </option>
+						<option value="">Male</option>
+						<option value="">Fimale</option>
+						</select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td align="right">Photo: </td>
+                    <td>
+                        <input type="file" name="u_image" required>
+                    </td>
+				</tr>
+				<tr>
+                    <td align="center" colspan="6">
+                        <input type="submit" name="update" value="Update">
+                    </td>
+				</tr>
+				
+			</table>
+			</form><!-- f ff ends here -->
 
-         <h3>Most Recent Discussion!</h3>
-         <?php getPosts(); ?>
+		   <?php
+		    if(isset($_POST['update'])){
+               $u_name = $_POST['u_name'];
+               $u_pass = $_POST['u_pass'];
+               $u_email = $_POST['u_email'];
+               $u_image = $_FILES['u_image']['name'];
+			   $image_tmp = $_FILES['u_image']['tmp_name'];
+			   move_uploaded_file($image_tmp,"images/users/$u_image");
+
+			   $update = "update users set user_name='$u_name', user_pass='$u_pass', user_email='$u_email', user_image='$u_image' where user_id='$user_id' ";
+			   $run = mysqli_query($con,$update);
+
+			   if($run){
+				   echo "<script>alert('youre profile updated');</script>";
+				   echo "<script>window.open('home.php' , '_self');</script>";
+			   } else {
+				echo "<script>alert('youre profile not updated');</script>";
+			   }
+		    }
+		   ?>
+		 
     </div><!-- content_timeline ends here -->
 
  </div><!-- content ends here -->

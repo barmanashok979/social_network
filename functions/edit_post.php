@@ -1,8 +1,8 @@
 <?php  
 session_start();
 
-include("includes/connection.php");
-include("functions/functions.php");
+include("../includes/connection.php");
+include("../functions/functions.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,7 +10,7 @@ include("functions/functions.php");
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>WELCOME USER!</title>
-    <link rel="stylesheet" href="styles/home_style.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="../styles/home_style.css" type="text/css" media="screen">
     <meta name="viewport" content="width=device-width, initial-scale=1" >
     <script src="main.js"></script>
 </head>
@@ -81,7 +81,7 @@ include("functions/functions.php");
 
                echo "
                      <center>
-                        <img src='images/users/$user_image' width='200' height='200' />
+                        <img src='../images/users/$user_image' width='200' height='200' />
                      </center>
                      <div id='user_mention'>
                          <p><strong>Name:</strong> $user_name </P>
@@ -100,20 +100,47 @@ include("functions/functions.php");
     </div><!-- user_timeline ends here -->
 
     <div id="content_timeline">
-         <form action="home.php?id=<?php echo $user_id ?>" method="post" id="f">
-            <h2>What's Your question today? let's discuss!</h2>
-            <input type="text" name="title" placeholder="Write a Title..." size="80" required> <br>
-            <textarea cols="82" rows="4" name="content" placeholder="Write description..."></textarea><br>
-            <select name="topic">
-                <option>Select Topic</option>
-                <?php getTopics() ?>
-            </select>
-            <input type="submit" name="sub" value="Post to Timeline">
-         </form><!-- f ends here -->
-         <?php insertPosts() ?>
+	   <?php
+	    if(isset($_GET['post_id'])){
+			$get_id = $_GET['post_id'];
 
-         <h3>Most Recent Discussion!</h3>
-         <?php getPosts(); ?>
+			$get_post = "select * from posts where post_id='$get_id'";
+			$run_post = mysqli_query($con,$get_post);
+			$row = mysqli_fetch_array($run_post);
+
+			$post_title = $row['post_title'];
+			$post_con = $row['post_content'];
+		}
+	   ?>
+	   <form action="" method="post" id="f">
+		   <h2>Edit Your Post</h2>
+		   <input type="text" name="title" value="<?php echo $post_title; ?>" size="82" required><br>
+		   <textarea cols="83" rows="4" name="content">
+			   <?php echo $post_con; ?>
+		   </textarea>
+		   <select name="topic" id="">
+			   <option>Select Topic </option>
+			   <?php getTopics(); ?>
+		   </select>
+		   <input type="submit" name="update" value="Update Post">
+       </form> <!-- f ends here -->
+       
+       <?php
+          if(isset($_POST['update'])){
+             $title = $_POST['title'];
+             $content = $_POST['content'];
+             $topic = $_POST['topic'];
+
+             $update_post = "update posts set post_title='$title', post_content='$content' ,topic_id='$topic' where post_id='$get_id'";
+             $run_update = mysqli_query($con,$update_post);
+
+             if($run_update){
+                 echo "<script>alert('post has been updated')</script>";
+                 echo "<script>window.open('../home.php' , '_self')</script>";
+             }
+          }
+       ?>
+	   
     </div><!-- content_timeline ends here -->
 
  </div><!-- content ends here -->

@@ -191,3 +191,49 @@ function members(){
 		    ";
 	}
 }
+
+//function for user displaing user posts
+function user_posts(){
+	 global $con;
+
+	 if(isset($_GET['u_id'])){
+		  $u_id = $_GET['u_id'];
+	 }
+	 $get_posts = "select * from posts where user_id='$u_id' ORDER by 1 DESC LIMIT 5";
+	 $run_posts = mysqli_query($con,$get_posts);
+	 while($row_posts=mysqli_fetch_array($run_posts)){
+	   	$post_id = $row_posts['post_id'];
+	  	$user_id = $row_posts['user_id'];
+	  	$post_title = $row_posts['post_title'];
+	  	$content = $row_posts['post_content'];
+			$post_date = $row_posts['post_date'];
+			
+			//getting the user who has posted the thread
+
+			$user = "select * from users where user_id='$user_id' AND posts='yes'";
+			$run_user = mysqli_query($con,$user);
+			$row_user = mysqli_fetch_array($run_user);
+			$user_name = $row_user['user_name'];
+			$user_image = $row_user['user_image'];
+				
+			//now display all at once
+		 echo "
+	   	<div id='posts'>
+			 <p><img src='images/users/$user_image' width='50' height='50' /></p>
+			 <h3><a id='user_s' href='user_profile.php?u_id=$user_id'>By : $user_name</a></h3>
+			 <h3>$post_title</h3>
+			 <p><strong id='date_p'>Post time: $post_date</strong></p>
+			 <p>$content</p>
+
+			 <a href='single.php?post_id=$post_id' style='float:right;'><button>View</button></a>
+
+			 <a href='functions/edit_post.php?post_id=$post_id' style='float:right;'><button>Edit</button></a>
+
+			 <a href='functions/delete_post.php?post_id=$post_id' style='float:right;'><button>Delete</button></a>
+
+	  	</div> <br> <!-- posts ends here -->
+		 ";
+		 include("delete_post.php");
+
+	 }
+}

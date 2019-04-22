@@ -276,3 +276,7 @@ color: rgb(128, 0, 128);
 font-weight: bold;
 border: 1px solid rgb(128, 0, 90);
 }
+
+.ff tr {
+margin: 10px 0px;
+}
